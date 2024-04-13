@@ -5,6 +5,7 @@ https://robotzero.one/heltec-wifi-lora-32/
 #include <LoRa.h>
 
 String receivedText;
+int receivedValue;
 String receivedRssi;
 
 // WIFI_LoRa_32 ports
@@ -28,7 +29,7 @@ void setup() {
   SPI.begin(5, 19, 27, 18);
   LoRa.setPins(SS, RST, DI0);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial)
     ;  //if just the the basic function, must connect to a computer
   delay(1000);
@@ -36,12 +37,12 @@ void setup() {
   u8x8.begin();
   u8x8.setFont(u8x8_font_chroma48medium8_r);
 
-  Serial.println("LoRa Receiver");
-  u8x8.drawString(0, 1, "LoRa Receiver");
+  //Serial.println("LoRa Receptor");
+  u8x8.drawString(0, 1, "Receptor");
 
   if (!LoRa.begin(BAND)) {
-    Serial.println("Starting LoRa failed!");
-    u8x8.drawString(0, 1, "Starting LoRa failed!");
+    //Serial.println("Falha ao iniciar comunicação via rádio");
+    u8x8.drawString(0, 1, "Falha iniciar radio");
     while (1)
       ;
   }
@@ -53,25 +54,27 @@ void loop() {
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
     // received a packet
-    Serial.print("Received packet '");
-    u8x8.drawString(0, 4, "PacketID");
+    //Serial.print("Received packet '");
+    u8x8.drawString(0, 4, "Nivel da agua: ");
 
     // read packet
     while (LoRa.available()) {
-      receivedText = (char)LoRa.read();
-      Serial.print(receivedText);
-      char currentid[64];
-      receivedText.toCharArray(currentid, 64);
-      u8x8.drawString(9, 4, currentid);
+      receivedValue = LoRa.parseInt();
+      Serial.println(receivedValue);
+      u8x8.setCursor(5,5);
+      u8x8.print(receivedValue);
+      u8x8.setCursor(8,5);
+      u8x8.print(" %");
+      //u8x8.drawString(5, 5, receivedText);
     }
 
     // print RSSI of packet
-    Serial.print("' with RSSI ");
-    Serial.println(LoRa.packetRssi());
-    u8x8.drawString(0, 5, "PacketRS");
+    //Serial.print("' with RSSI ");
+    //Serial.println(LoRa.packetRssi());
+    u8x8.drawString(0, 6, "PacketRS");
     receivedRssi = LoRa.packetRssi();
     char currentrs[64];
     receivedRssi.toCharArray(currentrs, 64);
-    u8x8.drawString(9, 5, currentrs);
+    u8x8.drawString(9, 6, currentrs);
   }
 }
