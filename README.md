@@ -1,4 +1,9 @@
 # TCC
+
+## Sistemas operacionais onde funcionou
+Funcionou no Ubuntu e raspbery pi 4
+Não funcionou no windows
+
 ## Biblioteca Heltec não funcionou
 Infelizmente a biblioteca Heltec não funciou. Esta foi substituida por u8g2.h
 Usando a frequência de 915 MHz
