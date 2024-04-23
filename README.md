@@ -39,9 +39,5 @@ Usei flask inicialmente, mas para rodar na web, acabou dando certo com php.
 ### Desenvolver o dashboard
 
 Apenas exibindo os dados em tabela e em um gráfico simples.
-
-\[
-$$\frac a b$$
-\]
-
-\[ F = m \cdot a \]
+Dados disponíveis aqui:
+https://profdanilo.com.br/tcc/nivel.php
