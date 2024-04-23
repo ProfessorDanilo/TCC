@@ -60,11 +60,23 @@ void loop() {
     // read packet
     while (LoRa.available()) {
       receivedValue = LoRa.parseInt();
+      if(receivedValue == 0){
+        u8x8.setCursor(5,5);        
+        u8x8.print("  ");
+        u8x8.print(receivedValue);
+        u8x8.print(" %");
+      }else if(receivedValue <= 75){
+        u8x8.setCursor(5,5);        
+        u8x8.print(" ");
+        u8x8.print(receivedValue);
+        u8x8.print(" %");
+      } else{
+        u8x8.setCursor(5,5);        
+        u8x8.print("");
+        u8x8.print(receivedValue);
+        u8x8.print(" %");
+      }
       Serial.println(receivedValue);
-      u8x8.setCursor(5,5);
-      u8x8.print(receivedValue);
-      u8x8.setCursor(8,5);
-      u8x8.print(" %");
       //u8x8.drawString(5, 5, receivedText);
     }
 

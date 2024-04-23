@@ -19,14 +19,19 @@ https://github.com/sandeepmistry/arduino-LoRa/
 
 //Definindo o sensor
 #define B 13
-#define C 36
+#define C 12
 #define D 17
-#define E 21 
+#define E 21
 
 //display oled a ser usado
 U8X8_SSD1306_128X64_NONAME_SW_I2C u8x8(/* clock=*/15, /* data=*/4, /* reset=*/16);
 
 void setup() {
+
+  pinMode(B, INPUT_PULLUP);
+  pinMode(C, INPUT_PULLUP);
+  pinMode(D, INPUT_PULLUP);
+  pinMode(E, INPUT_PULLUP);
   
   SPI.begin(5, 19, 27, 18);
   LoRa.setPins(SS, RST, DI0);
