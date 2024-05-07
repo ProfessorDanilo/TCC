@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoramento de Nível de água</title>
+    <link rel="icon" type="image/png" href="icone.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      function selecionarOpcao() {
+        var select = document.getElementById('opcoes');
+        var valorSelecionado = select.value;
+        console.log('Opção selecionada: ' + valorSelecionado);
+
+        var quantidade = document.getElementById('quantidade');
+        var quantidadeSelecionado = quantidade.value;
+        console.log(
+          'Número de dados a serem exibidos: ' + quantidadeSelecionado
+        );
+
+        plotData(valorSelecionado, quantidadeSelecionado);
+      }
+      window.onload = function () {
+        plotData('hora', '10');
+      };
+      function plotData(option, quant) {
+        var dataPoints = [];
+
+        var chart = new CanvasJS.Chart('chartContainer', {
+          animationEnabled: true,
+          exportEnabled: true,
+          title: {
+            text: 'Monitoramento de nível da água',
+          },
+          axisY: {
+            title: 'Nível da água',
+          },
+          data: [
+            {
+              type: 'column',
+              toolTipContent: '{y}% do nível',
+              dataPoints: dataPoints,
+            },
+          ],
+        });
+
+        $.get('niveis.csv', getDataPointsFromCSV);
+
+        //CSV Format
+        //Year,Volume
+        function getDataPointsFromCSV(csv) {
+          var csvLines = (points = []);
+          csvLines = csv.split(/[\r?\n|\r|\n]+/);
+          switch (option) {
+            case 'hora':
+              for (var i = csvLines.length - +quant; i < csvLines.length; i++) {
+                if (csvLines[i].length > 0) {
+                  points = csvLines[i].split(',');
+                  dataPoints.push({
+                    label: points[0],
+                    y: parseFloat(points[3]),
+                  });
+                }
+              }
+              break;
+            case 'dia':
+              var i = csvLines.length - 24 * +quant;
+              if (i < 0) {
+                i = 0;
+              }
+              for (i; i < csvLines.length; i = i + 24) {
+                if (csvLines[i].length > 0) {
+                  points = csvLines[i].split(',');
+                  dataPoints.push({
+                    label: points[2],
+                    y: parseFloat(points[3]),
+                  });
+                }
+              }
+              break;
+          }
+
+          chart.render();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chartContainer" style="height: 370px; width: 100%"></div>
+    <div class="options">
+      <p>Intervalo de coleta de dados:</p>
+      <select id="opcoes" onchange="selecionarOpcao()">
+        <option value="hora">Hora</option>
+        <option value="dia">Dia</option>
+      </select>
+    </div>
+    <div class="options">
+      <p>Número de dados a serem exibidos:</p>
+      <select id="quantidade" onchange="selecionarOpcao()">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+      </select>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"
+    ></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+  </body>
+</html>
